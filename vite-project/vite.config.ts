@@ -1,4 +1,5 @@
 import windi from 'vite-plugin-windicss';
+import viteEslint from 'vite-plugin-eslint';
 import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -15,29 +16,29 @@ const variablePath = normalizePath(path.resolve('./src/variable.scss'));
 export default defineConfig({
   // 手动指定项目根目录位置 -> ${root}/index.html
   // root: path.join(__dirname, 'src'),
-  plugins: [react(), windi()],
+  plugins: [react(), windi(), viteEslint()],
   // 解决scss全局变量单独引入的问题
   // css 相关的配置
   css: {
     modules: {
       // 一般我们可以通过 generateScopedName 属性来对生成的类名进行自定义
       // 其中，name 表示当前文件名，local 表示类名
-      generateScopedName: '[name]__[local]___[hash:base64:5]',
+      generateScopedName: '[name]__[local]___[hash:base64:5]'
     },
     preprocessorOptions: {
       scss: {
         // additionalData 的内容会在每个 scss 文件的开头自动注入
-        additionalData: `@import "${variablePath}";`,
-      },
+        additionalData: `@import "${variablePath}";`
+      }
     },
     // 进行 PostCSS 配置
     postcss: {
       plugins: [
         autoprefixer({
           // 指定目标浏览器
-          overrideBrowserslist: ['Chrome > 10', 'ff > 11', 'ie 11'],
-        }),
-      ],
-    },
-  },
+          overrideBrowserslist: ['Chrome > 10', 'ff > 11', 'ie 11']
+        })
+      ]
+    }
+  }
 });

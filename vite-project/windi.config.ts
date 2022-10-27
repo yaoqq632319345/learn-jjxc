@@ -5,6 +5,6 @@ export default defineConfig({
   attributify: true,
   // shortcuts 用来封装一系列的原子化能力，尤其是一些常见的类名集合
   shortcuts: {
-    'flex-c': 'flex justify-center items-center',
-  },
+    'flex-c': 'flex justify-center items-center'
+  }
 });
