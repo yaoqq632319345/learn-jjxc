@@ -1,5 +1,9 @@
 // index.tsx
 import styles from './index.module.scss';
 export function Header() {
-  return <p className={styles.header}>This is Header</p>;
+  return (
+    <div className='p-20px text-center'>
+      <h1 className='font-bold text-2xl mb-2'>header</h1>
+    </div>
+  );
 }

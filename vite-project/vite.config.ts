@@ -1,3 +1,4 @@
+import windi from 'vite-plugin-windicss';
 import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -14,7 +15,7 @@ const variablePath = normalizePath(path.resolve('./src/variable.scss'));
 export default defineConfig({
   // 手动指定项目根目录位置 -> ${root}/index.html
   // root: path.join(__dirname, 'src'),
-  plugins: [react()],
+  plugins: [react(), windi()],
   // 解决scss全局变量单独引入的问题
   // css 相关的配置
   css: {
