@@ -1,5 +1,7 @@
 import windi from 'vite-plugin-windicss';
 import viteEslint from 'vite-plugin-eslint';
+import viteStylelint from 'vite-plugin-stylelint';
+
 import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -16,7 +18,15 @@ const variablePath = normalizePath(path.resolve('./src/variable.scss'));
 export default defineConfig({
   // 手动指定项目根目录位置 -> ${root}/index.html
   // root: path.join(__dirname, 'src'),
-  plugins: [react(), windi(), viteEslint()],
+  plugins: [
+    react(),
+    windi(),
+    viteEslint(),
+    viteStylelint({
+      // 对某些文件排除检查
+      exclude: ['windicss', 'node_modules']
+    })
+  ],
   // 解决scss全局变量单独引入的问题
   // css 相关的配置
   css: {
