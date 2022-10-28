@@ -1,6 +1,7 @@
 import windi from 'vite-plugin-windicss';
 import viteEslint from 'vite-plugin-eslint';
 import viteStylelint from 'vite-plugin-stylelint';
+import svgr from 'vite-plugin-svgr';
 
 import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
@@ -16,10 +17,17 @@ import { normalizePath } from 'vite';
 const variablePath = normalizePath(path.resolve('./src/variable.scss'));
 // https://vitejs.dev/config/
 export default defineConfig({
+  resolve: {
+    // 别名配置
+    alias: {
+      '@assets': path.join(__dirname, 'src/assets')
+    }
+  },
   // 手动指定项目根目录位置 -> ${root}/index.html
   // root: path.join(__dirname, 'src'),
   plugins: [
     react(),
+    svgr(),
     windi(),
     viteEslint(),
     viteStylelint({
