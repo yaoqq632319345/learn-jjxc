@@ -34,7 +34,9 @@ module.exports = {
     // 解决 /src/types/shim.d.ts 空的interface 报错
     '@typescript-eslint/no-empty-interface': 'off',
     // 解决使用windicss attributify 未知的dom 属性报错
-    'react/no-unknown-property': 'off'
+    'react/no-unknown-property': 'off',
+    // 解决不让使用require的报错
+    '@typescript-eslint/no-var-requires': 'off'
   },
   // 解决命令行中的 warning: React version not specified in eslint-plugin-react settings
   settings: {
