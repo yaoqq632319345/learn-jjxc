@@ -15,6 +15,12 @@ import { normalizePath } from 'vite';
 // 全局 scss 文件的路径
 // 用 normalizePath 解决 window 下的路径问题
 const variablePath = normalizePath(path.resolve('./src/variable.scss'));
+
+// 是否为生产环境，在生产环境一般会注入 NODE_ENV 这个环境变量，见下面的环境变量文件配置
+const isProduction = process.env.NODE_ENV === 'production';
+// 填入项目的 CDN 域名地址
+const CDN_URL = 'xxxxxx';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -23,6 +29,13 @@ export default defineConfig({
       '@assets': path.join(__dirname, 'src/assets')
     }
   },
+  base: isProduction ? CDN_URL : '/', // 静态资源 cdn 地址替换
+  // 添加这个之后 json文件 就会默认导出一整个obj, 可以优化解析性能
+  json: {
+    stringify: true
+  },
+  // 其他vite未支持但需要用到的文件后缀
+  assetsInclude: ['.gltf'],
   // 手动指定项目根目录位置 -> ${root}/index.html
   // root: path.join(__dirname, 'src'),
   plugins: [
