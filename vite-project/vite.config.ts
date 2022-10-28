@@ -102,5 +102,14 @@ export default defineConfig({
   build: {
     // 静态资源内联 or 单文件临界值
     assetsInlineLimit: 8 * 1024
+  },
+  // 预构建
+  optimizeDeps: {
+    esbuildOptions: {
+      plugins: [
+        // 加入 Esbuild 插件
+      ]
+    },
+    force: false
   }
 });
