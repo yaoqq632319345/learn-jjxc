@@ -2,6 +2,8 @@ import windi from 'vite-plugin-windicss';
 import viteEslint from 'vite-plugin-eslint';
 import viteStylelint from 'vite-plugin-stylelint';
 import svgr from 'vite-plugin-svgr';
+import viteImagemin from 'vite-plugin-imagemin';
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 
 import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
@@ -43,6 +45,31 @@ export default defineConfig({
     svgr(),
     windi(),
     viteEslint(),
+    createSvgIconsPlugin({
+      iconDirs: [path.join(__dirname, 'src/assets/icons')]
+    }),
+    viteImagemin({
+      // 无损压缩配置，无损压缩下图片质量不会变差
+      optipng: {
+        optimizationLevel: 7
+      },
+      // 有损压缩配置，有损压缩下图片质量可能会变差
+      pngquant: {
+        quality: [0.8, 0.9]
+      },
+      // svg 优化
+      svgo: {
+        plugins: [
+          {
+            name: 'removeViewBox'
+          },
+          {
+            name: 'removeEmptyAttrs',
+            active: false
+          }
+        ]
+      }
+    }),
     viteStylelint({
       // 对某些文件排除检查
       exclude: ['windicss', 'node_modules']
@@ -71,5 +98,9 @@ export default defineConfig({
         })
       ]
     }
+  },
+  build: {
+    // 静态资源内联 or 单文件临界值
+    assetsInlineLimit: 8 * 1024
   }
 });

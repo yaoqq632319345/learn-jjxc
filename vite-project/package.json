@@ -14,6 +14,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
+  "resolutions": {
+    "bin-wrapper": "npm:bin-wrapper-china"
+  },
   "devDependencies": {
     "@types/node": "^18.11.7",
     "@types/react": "^18.0.22",
@@ -38,7 +41,9 @@
     "typescript": "^4.6.4",
     "vite": "^3.2.0",
     "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-imagemin": "^0.6.1",
     "vite-plugin-stylelint": "^3.0.8",
+    "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-svgr": "^2.2.2",
     "vite-plugin-windicss": "^1.8.8",
     "windicss": "^3.5.6"

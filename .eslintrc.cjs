@@ -29,6 +29,8 @@ module.exports = {
   rules: {
     // 3. 注意要加上这一句，开启 prettier 自动修复的功能
     'prettier/prettier': 'error',
+    // 显示any声明不报警告
+    '@typescript-eslint/no-explicit-any': 'off',
     // 解决 /src/types/shim.d.ts 空的interface 报错
     '@typescript-eslint/no-empty-interface': 'off',
     // 解决使用windicss attributify 未知的dom 属性报错
