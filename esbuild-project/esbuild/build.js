@@ -1,5 +1,7 @@
 const { build, buildSync, serve } = require('esbuild');
 const httpImport = require('./plugin');
+const html = require('./html-plugin');
+const path = require('path');
 
 function runBuild() {
   // 异步方法，返回一个 Promise
@@ -8,7 +10,7 @@ function runBuild() {
     // 当前项目根目录
     absWorkingDir: process.cwd(),
     // 入口文件列表，为一个数组
-    entryPoints: ['./src/index.jsx'],
+    entryPoints: [path.resolve(__dirname, '../src/index.jsx')],
     // 打包产物目录
     outdir: 'dist',
     // 是否需要打包，一般设为 true
@@ -34,7 +36,7 @@ function runBuild() {
     loader: {
       '.png': 'base64'
     },
-    plugins: [httpImport()]
+    plugins: [httpImport(), html()]
   });
 }
 
