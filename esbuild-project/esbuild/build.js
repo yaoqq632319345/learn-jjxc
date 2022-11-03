@@ -1,8 +1,9 @@
 const { build, buildSync, serve } = require('esbuild');
+const httpImport = require('./plugin');
 
-async function runBuild() {
+function runBuild() {
   // 异步方法，返回一个 Promise
-  const result = await build({
+  build({
     // ----  如下是一些常见的配置  ---
     // 当前项目根目录
     absWorkingDir: process.cwd(),
@@ -32,9 +33,9 @@ async function runBuild() {
     // 针对一些特殊的文件，调用不同的 loader 进行加载
     loader: {
       '.png': 'base64'
-    }
+    },
+    plugins: [httpImport()]
   });
-  console.log(result);
 }
 
 runBuild();

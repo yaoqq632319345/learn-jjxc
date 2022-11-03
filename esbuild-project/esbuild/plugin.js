@@ -1,57 +1,47 @@
-let envPlugin = {
-  name: 'env',
+// http-import-plugin.js
+module.exports = () => ({
+  name: 'esbuild:http',
   setup(build) {
-    build.onResolve({ filter: /^env$/ }, (args) => {
-      // 模块路径
-      console.log(args.path);
-      // 父模块路径
-      console.log(args.importer);
-      // namespace 标识
-      console.log(args.namespace);
-      // 基准路径
-      console.log(args.resolveDir);
-      // 导入方式，如 import、require
-      console.log(args.kind);
-      // 额外绑定的插件数据
-      console.log(args.pluginData);
-      return {
-        // 错误信息
-        errors: [],
-        // 是否需要 external
-        external: false,
-        // namespace 标识
-        namespace: 'env-ns',
-        // 模块路径
-        path: args.path,
-        // 额外绑定的插件数据
-        pluginData: null,
-        // 插件名称
-        pluginName: 'xxx',
-        // 设置为 false，如果模块没有被用到，模块代码将会在产物中会删除。否则不会这么做
-        sideEffects: false,
-        // 添加一些路径后缀，如`?xxx`
-        suffix: '?xxx',
-        // 警告信息
-        warnings: [],
-        // 仅仅在 Esbuild 开启 watch 模式下生效
-        // 告诉 Esbuild 需要额外监听哪些文件/目录的变化
-        watchDirs: [],
-        watchFiles: []
-      };
-    });
+    let https = require('https');
+    let http = require('http');
 
-    build.onLoad({ filter: /.*/, namespace: 'env-ns' }, (args) => {
-      console.log(args);
+    // 1. 拦截 CDN 请求
+    build.onResolve({ filter: /^https?:\/\// }, (args) => ({
+      path: args.path,
+      namespace: 'http-url'
+    }));
+    build.onResolve({ filter: /.*/, namespace: 'http-url' }, (args) => ({
+      // 重写路径
+      path: new URL(args.path, args.importer).toString(),
+      namespace: 'http-url'
+    }));
+    // 2. 通过 fetch 请求加载 CDN 资源
+    build.onLoad({ filter: /.*/, namespace: 'http-url' }, async (args) => {
+      let contents = await new Promise((resolve, reject) => {
+        function fetch(url) {
+          console.log(`Downloading: ${url}`);
+          let lib = url.startsWith('https') ? https : http;
+          let req = lib
+            .get(url, (res) => {
+              if ([301, 302, 307].includes(res.statusCode)) {
+                // 重定向
+                fetch(new URL(res.headers.location, url).toString());
+                // req.abort();
+                req.destroy();
+              } else if (res.statusCode === 200) {
+                // 响应成功
+                let chunks = [];
+                res.on('data', (chunk) => chunks.push(chunk));
+                res.on('end', () => resolve(Buffer.concat(chunks)));
+              } else {
+                reject(new Error(`GET ${url} failed: status ${res.statusCode}`));
+              }
+            })
+            .on('error', reject);
+        }
+        fetch(args.path);
+      });
+      return { contents };
     });
   }
-};
-
-require('esbuild')
-  .build({
-    entryPoints: ['src/plugin.ts'],
-    bundle: true,
-    outfile: 'out.js',
-    // 应用插件
-    plugins: [envPlugin]
-  })
-  .catch(() => process.exit(1));
+});
