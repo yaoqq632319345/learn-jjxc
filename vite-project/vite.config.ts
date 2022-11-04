@@ -5,6 +5,8 @@ import svgr from 'vite-plugin-svgr';
 import viteImagemin from 'vite-plugin-imagemin';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 
+import testHookPlugin from './plugin/testHookPlugin';
+
 import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -41,6 +43,7 @@ export default defineConfig({
   // 手动指定项目根目录位置 -> ${root}/index.html
   // root: path.join(__dirname, 'src'),
   plugins: [
+    testHookPlugin(),
     react(),
     svgr(),
     windi(),
