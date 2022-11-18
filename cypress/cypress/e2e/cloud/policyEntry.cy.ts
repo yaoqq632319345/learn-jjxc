@@ -1,55 +1,14 @@
 import { v4 as uuid } from 'uuid';
-function setSelect(labelName: string, valueName?: string, className?: string) {
-  if (className) {
-    cy.get(className).contains(labelName).next().click();
-  } else {
-    cy.contains(labelName).next().click();
-  }
-  cy.wait(500);
-  if (valueName) {
-    cy.get('li:visible').contains(valueName).click();
-  } else {
-    cy.get('.el-select-dropdown__list li:visible').first().click();
-  }
-}
-function setCasc(labelName: string, valueName: string) {
-  cy.contains(labelName).next().click();
-  cy.wait(500);
-  cy.get('.el-cascader-menu__list:visible').contains(valueName).prev().click();
-}
+import { domain } from '../../utils/const';
+import { cypressInit } from '../../utils/cy-init';
+import { setCasc, setDate, setSelect } from '../../utils/form';
+import { login } from '../../utils/login';
 
-function setDate(labelName: string, valueName = 16) {
-  cy.contains(labelName).next().click();
-  cy.wait(800);
-  cy.get('.el-picker-panel:visible').contains(valueName).click();
-}
-
-Cypress.on('uncaught:exception', (err, runnable) => {
-  // returning false here prevents Cypress from
-  // failing the test
-  return false;
-});
-
-async function getCookie() {
-  return new Promise((resolve) => {
-    cy.getCookie('d2admin-1.20.1-ticket').then((cookies) => {
-      if (cookies?.value) {
-        resolve(cookies.value);
-      } else {
-        resolve(null);
-      }
-    });
-  });
-}
-
-const domain = 'http://localhost:8080';
+cypressInit();
 describe('cloud', () => {
   it('Visits the Kitchen Sink', async () => {
     cy.visit(domain);
-    const res = await getCookie();
-    if (!res) {
-      await login();
-    }
+    login();
     cy.visit(`${domain}/#/policy/policyEntry`);
     cy.wait(1000);
     cy.contains('取消').click();
@@ -100,13 +59,3 @@ describe('cloud', () => {
     cy.contains('开户人').next().find('input').type('开户人');
   });
 });
-async function login() {
-  return new Promise((res) => {
-    cy.get('input[name=mobile]').type('15888888888');
-    cy.get('input[name=password]').type('280113');
-    cy.get('input[placeholder=请输入手机验证码]').type('1111');
-    cy.get('.login-btn').contains('登录').click();
-
-    res(null);
-  });
-}
